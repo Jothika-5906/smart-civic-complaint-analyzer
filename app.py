@@ -52,7 +52,7 @@ def load_models():
 def load_data():
 
     return pd.read_csv(
-        "tn_civic_complaints_dataset.csv"
+        "tn_civic_complaints_dataset"
     )
 
 
