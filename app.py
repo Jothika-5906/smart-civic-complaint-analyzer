@@ -1,5 +1,4 @@
 import os
-import re
 import joblib
 import numpy as np
 import pandas as pd
@@ -9,7 +8,7 @@ from scipy.sparse import hstack, csr_matrix
 
 
 # ============================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================================================
 
 st.set_page_config(
@@ -31,18 +30,33 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # CUSTOM CSS
 # ============================================================
 
-st.markdown("""
+st.markdown(
+    """
 <style>
+
+/* ---------- MAIN APP ---------- */
 
 .stApp {
     background:
-        radial-gradient(circle at 10% 10%, rgba(30, 90, 160, 0.20), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(0, 180, 255, 0.10), transparent 30%),
-        linear-gradient(135deg, #06101f 0%, #071526 50%, #020912 100%);
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(30, 90, 160, 0.20),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(0, 180, 255, 0.10),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #06101f 0%,
+            #071526 50%,
+            #020912 100%
+        );
     color: #e8f1ff;
 }
 
-/* Hide Streamlit default elements */
 #MainMenu {
     visibility: hidden;
 }
@@ -56,10 +70,14 @@ header {
 }
 
 
-/* Sidebar */
+/* ---------- SIDEBAR ---------- */
 
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #07152a, #04101e);
+    background: linear-gradient(
+        180deg,
+        #07152a,
+        #04101e
+    );
     border-right: 1px solid rgba(70, 150, 255, 0.25);
 }
 
@@ -68,7 +86,7 @@ section[data-testid="stSidebar"] * {
 }
 
 
-/* Main title */
+/* ---------- TITLES ---------- */
 
 .command-title {
     font-size: 42px;
@@ -82,7 +100,7 @@ section[data-testid="stSidebar"] * {
     font-size: 17px;
     line-height: 1.6;
     color: #9fb4cf;
-    max-width: 800px;
+    max-width: 850px;
 }
 
 .status-pill {
@@ -98,7 +116,7 @@ section[data-testid="stSidebar"] * {
 }
 
 
-/* Section headings */
+/* ---------- SECTION TITLES ---------- */
 
 .section-title {
     font-size: 25px;
@@ -114,19 +132,25 @@ section[data-testid="stSidebar"] * {
 }
 
 
-/* KPI cards */
+/* ---------- KPI CARDS ---------- */
 
 .kpi-card {
-    background: linear-gradient(
-        145deg,
-        rgba(18, 35, 61, 0.95),
-        rgba(8, 21, 39, 0.95)
-    );
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 35, 61, 0.95),
+            rgba(8, 21, 39, 0.95)
+        );
     border: 1px solid rgba(83, 157, 255, 0.22);
     border-radius: 18px;
     padding: 22px;
     min-height: 125px;
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.20);
+}
+
+.kpi-icon {
+    font-size: 25px;
+    margin-bottom: 7px;
 }
 
 .kpi-label {
@@ -144,13 +168,8 @@ section[data-testid="stSidebar"] * {
     margin-top: 8px;
 }
 
-.kpi-icon {
-    font-size: 25px;
-    margin-bottom: 7px;
-}
 
-
-/* Prediction cards */
+/* ---------- PREDICTION CARDS ---------- */
 
 .prediction-card {
     background:
@@ -165,16 +184,11 @@ section[data-testid="stSidebar"] * {
     min-height: 220px;
     text-align: center;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease;
-}
-
-.prediction-card:hover {
-    transform: translateY(-4px);
 }
 
 .prediction-icon {
-    font-size: 36px;
-    margin-bottom: 15px;
+    font-size: 38px;
+    margin-bottom: 16px;
 }
 
 .prediction-label {
@@ -186,13 +200,72 @@ section[data-testid="stSidebar"] * {
 }
 
 .prediction-value {
-    font-size: 24px;
+    font-size: 23px;
     font-weight: 800;
     color: #ffffff;
+    line-height: 1.35;
 }
 
 
-/* Info cards */
+/* ---------- CONFIDENCE ---------- */
+
+.confidence-box {
+    margin-top: 22px;
+    padding: 20px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 35, 59, 0.95),
+            rgba(8, 20, 36, 0.95)
+        );
+    border-radius: 16px;
+    border: 1px solid rgba(70, 150, 255, 0.22);
+}
+
+.confidence-title {
+    color: #a9bdd5;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.confidence-value {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+
+/* ---------- LOCATION ---------- */
+
+.location-card {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 43, 73, 0.95),
+            rgba(7, 24, 43, 0.95)
+        );
+    border: 1px solid rgba(50, 170, 255, 0.25);
+    border-radius: 18px;
+    padding: 22px;
+    margin-top: 20px;
+}
+
+.info-title {
+    font-weight: 750;
+    color: #dceaff;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    color: #91a7c2;
+    line-height: 1.8;
+}
+
+
+/* ---------- GENERAL INFO ---------- */
 
 .info-card {
     background: rgba(11, 26, 45, 0.85);
@@ -202,56 +275,8 @@ section[data-testid="stSidebar"] * {
     margin-top: 12px;
 }
 
-.info-title {
-    font-weight: 750;
-    color: #dceaff;
-    margin-bottom: 8px;
-}
 
-.info-text {
-    color: #91a7c2;
-    line-height: 1.6;
-}
-
-
-/* Location card */
-
-.location-card {
-    background: linear-gradient(
-        135deg,
-        rgba(15, 43, 73, 0.95),
-        rgba(7, 24, 43, 0.95)
-    );
-    border: 1px solid rgba(50, 170, 255, 0.25);
-    border-radius: 18px;
-    padding: 22px;
-}
-
-
-/* Confidence */
-
-.confidence-box {
-    margin-top: 20px;
-    padding: 18px;
-    background: rgba(10, 25, 43, 0.90);
-    border-radius: 15px;
-    border: 1px solid rgba(70, 150, 255, 0.20);
-}
-
-.confidence-title {
-    color: #a9bdd5;
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-
-.confidence-value {
-    color: #ffffff;
-    font-size: 25px;
-    font-weight: 800;
-}
-
-
-/* Streamlit widgets */
+/* ---------- STREAMLIT INPUTS ---------- */
 
 div[data-baseweb="input"],
 div[data-baseweb="select"],
@@ -277,17 +302,20 @@ div[data-baseweb="textarea"] {
 }
 
 
-/* Buttons */
+/* ---------- BUTTON ---------- */
 
 .stButton > button {
     width: 100%;
     border-radius: 12px;
     border: 1px solid rgba(60, 170, 255, 0.45);
-    background: linear-gradient(135deg, #1478d4, #0c4f9b);
+    background: linear-gradient(
+        135deg,
+        #1478d4,
+        #0c4f9b
+    );
     color: white;
     font-weight: 750;
     padding: 12px;
-    transition: all 0.2s ease;
 }
 
 .stButton > button:hover {
@@ -296,7 +324,7 @@ div[data-baseweb="textarea"] {
 }
 
 
-/* Dataframe */
+/* ---------- DATAFRAME ---------- */
 
 [data-testid="stDataFrame"] {
     border-radius: 15px;
@@ -304,60 +332,82 @@ div[data-baseweb="textarea"] {
 }
 
 
-/* Divider */
+/* ---------- DIVIDER ---------- */
 
 hr {
     border-color: rgba(100, 150, 210, 0.15) !important;
 }
 
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
 
 
 # ============================================================
-# FILE LOADING
+# LOAD DATASET
 # ============================================================
 
 @st.cache_data
 def load_data():
 
-    candidates = [
+    possible_files = [
         "tn_civic_complaints_dataset",
         "tn_civic_complaints_dataset.csv"
     ]
 
-    for filename in candidates:
+    for filename in possible_files:
 
-        path = os.path.join(BASE_DIR, filename)
+        file_path = os.path.join(
+            BASE_DIR,
+            filename
+        )
 
-        if os.path.exists(path):
-            return pd.read_csv(path)
+        if os.path.exists(file_path):
+
+            return pd.read_csv(file_path)
 
     raise FileNotFoundError(
-        "Dataset not found. Please upload "
-        "'tn_civic_complaints_dataset' or "
-        "'tn_civic_complaints_dataset.csv' "
+        "Dataset not found. Upload "
+        "'tn_civic_complaints_dataset' "
+        "or 'tn_civic_complaints_dataset.csv' "
         "to the same GitHub repository as app.py."
     )
 
+
+# ============================================================
+# LOAD MODELS
+# ============================================================
 
 @st.cache_resource
 def load_models():
 
     department_vectorizer = joblib.load(
-        os.path.join(BASE_DIR, "tn_department_vectorizer.pkl")
+        os.path.join(
+            BASE_DIR,
+            "tn_department_vectorizer.pkl"
+        )
     )
 
     department_model = joblib.load(
-        os.path.join(BASE_DIR, "tn_department_model.pkl")
+        os.path.join(
+            BASE_DIR,
+            "tn_department_model.pkl"
+        )
     )
 
     priority_vectorizer = joblib.load(
-        os.path.join(BASE_DIR, "tn_priority_vectorizer.pkl")
+        os.path.join(
+            BASE_DIR,
+            "tn_priority_vectorizer.pkl"
+        )
     )
 
     priority_model = joblib.load(
-        os.path.join(BASE_DIR, "tn_priority_model.pkl")
+        os.path.join(
+            BASE_DIR,
+            "tn_priority_model.pkl"
+        )
     )
 
     return (
@@ -369,7 +419,7 @@ def load_models():
 
 
 # ============================================================
-# LOAD DATA + MODELS
+# INITIALIZE
 # ============================================================
 
 df = load_data()
@@ -400,7 +450,7 @@ priority_to_resolution = {
 
 
 # ============================================================
-# AI ANALYZER
+# AI PREDICTION FUNCTION
 # ============================================================
 
 def analyze_complaint(
@@ -410,41 +460,65 @@ def analyze_complaint(
     previous_complaints
 ):
 
-    if not isinstance(complaint_text, str) or not complaint_text.strip():
-        raise ValueError("Please enter a complaint description.")
+    if not isinstance(
+        complaint_text,
+        str
+    ) or not complaint_text.strip():
 
-    department_vector = department_vectorizer.transform(
-        [complaint_text]
+        raise ValueError(
+            "Please enter a complaint description."
+        )
+
+    # Department prediction
+    department_vector = (
+        department_vectorizer.transform(
+            [complaint_text]
+        )
     )
 
-    predicted_department = department_model.predict(
-        department_vector
-    )[0]
-
-    text_vector = priority_vectorizer.transform(
-        [complaint_text]
+    predicted_department = (
+        department_model.predict(
+            department_vector
+        )[0]
     )
 
-    severity_encoded = severity_mapping[severity]
+    # Priority prediction
+    text_vector = (
+        priority_vectorizer.transform(
+            [complaint_text]
+        )
+    )
 
-    structured_features = csr_matrix([[
-        severity_encoded,
-        population_affected,
-        previous_complaints
-    ]])
+    severity_encoded = (
+        severity_mapping[severity]
+    )
 
-    combined_features = hstack([
-        text_vector,
-        structured_features
-    ])
+    structured_features = csr_matrix(
+        [[
+            severity_encoded,
+            population_affected,
+            previous_complaints
+        ]]
+    )
 
-    predicted_priority = priority_model.predict(
-        combined_features
-    )[0]
+    combined_features = hstack(
+        [
+            text_vector,
+            structured_features
+        ]
+    )
 
-    predicted_resolution = priority_to_resolution[
-        predicted_priority
-    ]
+    predicted_priority = (
+        priority_model.predict(
+            combined_features
+        )[0]
+    )
+
+    predicted_resolution = (
+        priority_to_resolution[
+            predicted_priority
+        ]
+    )
 
     return {
         "Department": predicted_department,
@@ -454,10 +528,10 @@ def analyze_complaint(
 
 
 # ============================================================
-# CONFIDENCE
+# CONFIDENCE FUNCTION
 # ============================================================
 
-def get_model_confidence(
+def get_confidence(
     complaint_text,
     severity,
     population_affected,
@@ -466,48 +540,47 @@ def get_model_confidence(
 
     try:
 
-        text_vector = priority_vectorizer.transform(
-            [complaint_text]
+        text_vector = (
+            priority_vectorizer.transform(
+                [complaint_text]
+            )
         )
 
-        structured_features = csr_matrix([[
-            severity_mapping[severity],
-            population_affected,
-            previous_complaints
-        ]])
+        structured_features = csr_matrix(
+            [[
+                severity_mapping[severity],
+                population_affected,
+                previous_complaints
+            ]]
+        )
 
-        combined_features = hstack([
-            text_vector,
-            structured_features
-        ])
+        combined_features = hstack(
+            [
+                text_vector,
+                structured_features
+            ]
+        )
 
-        if hasattr(priority_model, "predict_proba"):
+        if hasattr(
+            priority_model,
+            "predict_proba"
+        ):
 
-            probabilities = priority_model.predict_proba(
-                combined_features
-            )[0]
-
-            return float(np.max(probabilities) * 100)
-
-        elif hasattr(priority_model, "decision_function"):
-
-            scores = priority_model.decision_function(
-                combined_features
+            probabilities = (
+                priority_model.predict_proba(
+                    combined_features
+                )[0]
             )
 
-            if np.ndim(scores) == 1:
-                score = abs(float(scores[0]))
-            else:
-                score = float(np.max(scores))
+            return float(
+                np.max(probabilities) * 100
+            )
 
-            confidence = 50 + min(score * 10, 49)
-
-            return confidence
+        return 90.0
 
     except Exception:
-        pass
 
-    return 90.0
+        return 90.0
 
 
 # ============================================================
@@ -516,7 +589,7 @@ def get_model_confidence(
 
 st.sidebar.markdown(
     """
-    <div style="text-align:center; padding:20px 5px;">
+    <div style="text-align:center;padding:20px 5px;">
         <div style="font-size:45px;">🏙️</div>
         <div style="
             font-size:21px;
@@ -555,7 +628,10 @@ st.sidebar.markdown("---")
 st.sidebar.markdown(
     """
     <div class="info-card">
-        <div class="info-title">SYSTEM STATUS</div>
+        <div class="info-title">
+            SYSTEM STATUS
+        </div>
+
         <div class="info-text">
             ● AI Engine Online<br>
             ● Dataset Connected<br>
@@ -568,7 +644,7 @@ st.sidebar.markdown(
 
 
 # ============================================================
-# COMMAND CENTER
+# PAGE 1 — COMMAND CENTER
 # ============================================================
 
 if page == "🏠 Command Center":
@@ -592,75 +668,99 @@ if page == "🏠 Command Center":
         unsafe_allow_html=True
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # KPI calculations
+    st.markdown(
+        "<br>",
+        unsafe_allow_html=True
+    )
 
     total_complaints = len(df)
 
     resolved = int(
-        (df["Complaint_Status"] == "Resolved").sum()
+        (
+            df["Complaint_Status"]
+            == "Resolved"
+        ).sum()
     )
 
     pending = int(
-        (df["Complaint_Status"] == "Pending").sum()
-    )
-
-    in_progress = int(
-        (df["Complaint_Status"] == "In Progress").sum()
+        (
+            df["Complaint_Status"]
+            == "Pending"
+        ).sum()
     )
 
     high_priority = int(
-        (df["Priority_Level"] == "High").sum()
+        (
+            df["Priority_Level"]
+            == "High"
+        ).sum()
     )
-
-    # KPI cards
 
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
+
         st.markdown(
             f"""
             <div class="kpi-card">
                 <div class="kpi-icon">📋</div>
-                <div class="kpi-label">Total Complaints</div>
-                <div class="kpi-value">{total_complaints:,}</div>
+                <div class="kpi-label">
+                    Total Complaints
+                </div>
+                <div class="kpi-value">
+                    {total_complaints:,}
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with col2:
+
         st.markdown(
             f"""
             <div class="kpi-card">
                 <div class="kpi-icon">✅</div>
-                <div class="kpi-label">Resolved</div>
-                <div class="kpi-value">{resolved:,}</div>
+                <div class="kpi-label">
+                    Resolved
+                </div>
+                <div class="kpi-value">
+                    {resolved:,}
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with col3:
+
         st.markdown(
             f"""
             <div class="kpi-card">
                 <div class="kpi-icon">🚨</div>
-                <div class="kpi-label">High Priority</div>
-                <div class="kpi-value">{high_priority:,}</div>
+                <div class="kpi-label">
+                    High Priority
+                </div>
+                <div class="kpi-value">
+                    {high_priority:,}
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with col4:
+
         st.markdown(
             f"""
             <div class="kpi-card">
                 <div class="kpi-icon">⏳</div>
-                <div class="kpi-label">Pending</div>
-                <div class="kpi-value">{pending:,}</div>
+                <div class="kpi-label">
+                    Pending
+                </div>
+                <div class="kpi-value">
+                    {pending:,}
+                </div>
             </div>
             """,
             unsafe_allow_html=True
@@ -671,9 +771,10 @@ if page == "🏠 Command Center":
         <div class="section-title">
             📊 Civic Overview
         </div>
+
         <div class="section-description">
-            Current distribution of complaints across departments,
-            priority levels and resolution status.
+            Current distribution of complaints across
+            departments, priority levels and status.
         </div>
         """,
         unsafe_allow_html=True
@@ -746,8 +847,6 @@ if page == "🏠 Command Center":
             use_container_width=True
         )
 
-    # Status
-
     status_counts = (
         df["Complaint_Status"]
         .value_counts()
@@ -780,7 +879,7 @@ if page == "🏠 Command Center":
 
 
 # ============================================================
-# AI COMPLAINT ANALYZER
+# PAGE 2 — AI COMPLAINT ANALYZER
 # ============================================================
 
 elif page == "🤖 AI Complaint Analyzer":
@@ -799,9 +898,10 @@ elif page == "🤖 AI Complaint Analyzer":
         unsafe_allow_html=True
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # Complaint
+    st.markdown(
+        "<br>",
+        unsafe_allow_html=True
+    )
 
     st.markdown(
         """
@@ -827,7 +927,11 @@ elif page == "🤖 AI Complaint Analyzer":
 
         severity = st.selectbox(
             "Severity",
-            ["Low", "Medium", "High"]
+            [
+                "Low",
+                "Medium",
+                "High"
+            ]
         )
 
     with col2:
@@ -850,8 +954,6 @@ elif page == "🤖 AI Complaint Analyzer":
             step=1
         )
 
-    # Location
-
     st.markdown(
         """
         <div class="section-title">
@@ -863,11 +965,14 @@ elif page == "🤖 AI Complaint Analyzer":
 
     location_col1, location_col2, location_col3 = st.columns(3)
 
-    with location_col1:
+    districts = sorted(
+        df["District"]
+        .dropna()
+        .unique()
+        .tolist()
+    )
 
-        districts = sorted(
-            df["District"].dropna().unique().tolist()
-        )
+    with location_col1:
 
         district = st.selectbox(
             "District",
@@ -878,14 +983,14 @@ elif page == "🤖 AI Complaint Analyzer":
         df["District"] == district
     ]
 
-    with location_col2:
+    taluks = sorted(
+        district_df["Taluk"]
+        .dropna()
+        .unique()
+        .tolist()
+    )
 
-        taluks = sorted(
-            district_df["Taluk"]
-            .dropna()
-            .unique()
-            .tolist()
-        )
+    with location_col2:
 
         taluk = st.selectbox(
             "Taluk",
@@ -896,21 +1001,24 @@ elif page == "🤖 AI Complaint Analyzer":
         district_df["Taluk"] == taluk
     ]
 
-    with location_col3:
+    local_bodies = sorted(
+        taluk_df["Local_Body"]
+        .dropna()
+        .unique()
+        .tolist()
+    )
 
-        local_bodies = sorted(
-            taluk_df["Local_Body"]
-            .dropna()
-            .unique()
-            .tolist()
-        )
+    with location_col3:
 
         local_body = st.selectbox(
             "Local Body",
             local_bodies
         )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        "<br>",
+        unsafe_allow_html=True
+    )
 
     analyze_button = st.button(
         "🚀 ANALYZE COMPLAINT"
@@ -933,12 +1041,16 @@ elif page == "🤖 AI Complaint Analyzer":
                 previous_complaints
             )
 
-            confidence = get_model_confidence(
+            confidence = get_confidence(
                 complaint,
                 severity,
                 population,
                 previous_complaints
             )
+
+            # ------------------------------------------------
+            # RESULT TITLE
+            # ------------------------------------------------
 
             st.markdown(
                 """
@@ -949,13 +1061,15 @@ elif page == "🤖 AI Complaint Analyzer":
                 unsafe_allow_html=True
             )
 
-            # Prediction cards
+            # ------------------------------------------------
+            # RESULT CARDS
+            # ------------------------------------------------
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
 
-                st.markdown(
+                st.html(
                     f"""
                     <div class="prediction-card">
                         <div class="prediction-icon">
@@ -970,8 +1084,7 @@ elif page == "🤖 AI Complaint Analyzer":
                             {result["Department"]}
                         </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
+                    """
                 )
 
             with col2:
@@ -985,7 +1098,7 @@ elif page == "🤖 AI Complaint Analyzer":
                     "🟢"
                 )
 
-                st.markdown(
+                st.html(
                     f"""
                     <div class="prediction-card">
                         <div class="prediction-icon">
@@ -1000,13 +1113,12 @@ elif page == "🤖 AI Complaint Analyzer":
                             {result["Priority"]}
                         </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
+                    """
                 )
 
             with col3:
 
-                st.markdown(
+                st.html(
                     f"""
                     <div class="prediction-card">
                         <div class="prediction-icon">
@@ -1021,13 +1133,14 @@ elif page == "🤖 AI Complaint Analyzer":
                             {result["Resolution"]}
                         </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
+                    """
                 )
 
-            # Confidence
+            # ------------------------------------------------
+            # CONFIDENCE
+            # ------------------------------------------------
 
-            st.markdown(
+            st.html(
                 f"""
                 <div class="confidence-box">
                     <div class="confidence-title">
@@ -1038,17 +1151,21 @@ elif page == "🤖 AI Complaint Analyzer":
                         {confidence:.1f}%
                     </div>
                 </div>
-                """,
-                unsafe_allow_html=True
+                """
             )
 
             st.progress(
-                min(confidence / 100, 1.0)
+                min(
+                    confidence / 100,
+                    1.0
+                )
             )
 
-            # Location
+            # ------------------------------------------------
+            # LOCATION
+            # ------------------------------------------------
 
-            st.markdown(
+            st.html(
                 f"""
                 <div class="location-card">
                     <div class="info-title">
@@ -1056,26 +1173,33 @@ elif page == "🤖 AI Complaint Analyzer":
                     </div>
 
                     <div class="info-text">
-                        District: <b>{district}</b><br>
-                        Taluk: <b>{taluk}</b><br>
-                        Local Body: <b>{local_body}</b>
+                        District:
+                        <b>{district}</b><br>
+
+                        Taluk:
+                        <b>{taluk}</b><br>
+
+                        Local Body:
+                        <b>{local_body}</b>
                     </div>
                 </div>
-                """,
+                """
+            )
+
+            st.markdown(
+                "<br>",
                 unsafe_allow_html=True
             )
 
-            st.markdown("<br>", unsafe_allow_html=True)
-
             st.success(
-                f"Complaint successfully classified as "
-                f"{result['Department']} with "
-                f"{result['Priority']} priority."
+                f"Complaint classified as "
+                f"{result['Department']} department "
+                f"with {result['Priority']} priority."
             )
 
 
 # ============================================================
-# CIVIC INTELLIGENCE MAP
+# PAGE 3 — CIVIC INTELLIGENCE MAP
 # ============================================================
 
 elif page == "🗺️ Civic Intelligence Map":
@@ -1094,7 +1218,10 @@ elif page == "🗺️ Civic Intelligence Map":
         unsafe_allow_html=True
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        "<br>",
+        unsafe_allow_html=True
+    )
 
     map_df = df.copy()
 
@@ -1109,13 +1236,24 @@ elif page == "🗺️ Civic Intelligence Map":
     )
 
     map_df = map_df.dropna(
-        subset=["Latitude", "Longitude"]
+        subset=[
+            "Latitude",
+            "Longitude"
+        ]
     )
 
     priority_filter = st.multiselect(
         "Filter by Priority",
-        ["High", "Medium", "Low"],
-        default=["High", "Medium", "Low"]
+        [
+            "High",
+            "Medium",
+            "Low"
+        ],
+        default=[
+            "High",
+            "Medium",
+            "Low"
+        ]
     )
 
     if priority_filter:
@@ -1126,18 +1264,19 @@ elif page == "🗺️ Civic Intelligence Map":
             )
         ]
 
-    st.markdown(
+    st.html(
         f"""
         <div class="info-card">
             <div class="info-title">
                 📍 Active Map Records
             </div>
+
             <div class="info-text">
-                Showing {len(map_df):,} complaint locations.
+                Showing {len(map_df):,}
+                complaint locations.
             </div>
         </div>
-        """,
-        unsafe_allow_html=True
+        """
     )
 
     if len(map_df) > 0:
@@ -1176,12 +1315,13 @@ elif page == "🗺️ Civic Intelligence Map":
     else:
 
         st.warning(
-            "No complaint locations match the selected filter."
+            "No complaint locations match "
+            "the selected filter."
         )
 
 
 # ============================================================
-# ANALYTICS DASHBOARD
+# PAGE 4 — ANALYTICS DASHBOARD
 # ============================================================
 
 elif page == "📊 Analytics Dashboard":
@@ -1200,10 +1340,13 @@ elif page == "📊 Analytics Dashboard":
         unsafe_allow_html=True
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        "<br>",
+        unsafe_allow_html=True
+    )
 
     # --------------------------------------------------------
-    # Complaint categories
+    # CATEGORY ANALYSIS
     # --------------------------------------------------------
 
     category_counts = (
@@ -1238,7 +1381,7 @@ elif page == "📊 Analytics Dashboard":
     )
 
     # --------------------------------------------------------
-    # Severity
+    # SEVERITY + STATUS
     # --------------------------------------------------------
 
     col1, col2 = st.columns(2)
@@ -1308,7 +1451,7 @@ elif page == "📊 Analytics Dashboard":
         )
 
     # --------------------------------------------------------
-    # Resolution time
+    # RESOLUTION TIME
     # --------------------------------------------------------
 
     fig = px.histogram(
@@ -1335,7 +1478,7 @@ elif page == "📊 Analytics Dashboard":
     )
 
     # --------------------------------------------------------
-    # Recent complaints
+    # RECENT COMPLAINTS
     # --------------------------------------------------------
 
     st.markdown(
@@ -1358,8 +1501,9 @@ elif page == "📊 Analytics Dashboard":
     ]
 
     available_columns = [
-        col for col in display_columns
-        if col in df.columns
+        column
+        for column in display_columns
+        if column in df.columns
     ]
 
     st.dataframe(
@@ -1376,6 +1520,7 @@ elif page == "📊 Analytics Dashboard":
 st.markdown(
     """
     <br><br>
+
     <div style="
         text-align:center;
         color:#647b98;
