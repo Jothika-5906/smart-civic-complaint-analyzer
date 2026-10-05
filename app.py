@@ -625,7 +625,7 @@ page = st.sidebar.radio(
 
 st.sidebar.markdown("---")
 
-st.sidebar.markdown(
+st.sidebar.html(
     """
     <div class="info-card">
         <div class="info-title">
@@ -638,8 +638,7 @@ st.sidebar.markdown(
             ● Prediction Service Ready
         </div>
     </div>
-    """,
-    unsafe_allow_html=True
+    """
 )
 
 
