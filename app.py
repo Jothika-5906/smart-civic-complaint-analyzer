@@ -352,7 +352,6 @@ hr {
 def load_data():
 
     possible_files = [
-        "tn_dataset_with_survey_corrected.csv",
         "tn_civic_complaints_dataset",
         "tn_civic_complaints_dataset.csv"
     ]
